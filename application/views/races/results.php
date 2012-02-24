@@ -4,20 +4,21 @@
 	.timer {text-align: center; letter-spacing: 5px; height: 17px; font-weight: bold; font-size: 16px;}
 	
 	.circuit_wrapper {
-		background: url("../images/race/circuit.jpg") no-repeat 0 -100px;
+		background: url("../images/race/circuit.jpg") no-repeat;
 		width: 800px;
-		height: 460px;
+		height: 475px;
 		margin: 5px 0 5px 0;
 	}
 	.box {position: relative; height: 50px; padding: 5px 0 5px;}
 	.label {
 		position: absolute; 
-		width: 50px; 
+		width: 82px; 
 		top: 24px; 
 		left: 5px;
 		font-variant: small-caps;
 		font-weight: bold;
 		font-size: 16px;
+		text-align: right;
 	}
 	.allure {position: absolute; left:100px; width: 50px; height: 50px;}
 	.event {
@@ -55,6 +56,7 @@
 
 <div class="circuit_wrapper">
 		
+	<div style="height: 48px;"></div>
 	<?php foreach ($race->results as $result): ?>
 	
 		<div class="box">
