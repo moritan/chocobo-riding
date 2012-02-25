@@ -110,9 +110,6 @@ class Race_Controller extends Template_Controller
 		
 		$r = $this->_can_register($chocobo, $race);
 		
-		// TEMPORAIRE: pour empêcher les joueurs d efaire des courses
-		$r['success'] = FALSE;
-		
 		if ($r['success'])
 		{
 			$chocobo->race_id = $id;
