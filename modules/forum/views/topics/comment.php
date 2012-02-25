@@ -1,0 +1,120 @@
+<?php
+$first_comment = ($topic->comments[0]->id == $comment->id);
+$different_user = ($last_user_id !== $comment->user_id);
+?>
+
+<div id="c<?php echo $comment->id ?>"></div>
+<div class="comment">
+	<div class="avatar">
+		<?php
+		if ($different_user) 
+		{
+			echo $comment->user->picture(50);
+		}
+    	?>
+	</div>
+	<div class="right<?php echo $dark ?>" id="c<?php echo $comment->id ?>">
+		<div class="author">
+			<?php 
+			if ($different_user)
+			{
+				echo $comment->user->link();
+			}
+			?>
+        </div>
+		
+		<div class="notifications">
+			<?php
+			if ($user->has(ORM::factory('c_notification', $comment->id))) 
+			{
+				$user->remove(ORM::factory('c_notification', $comment->id));
+				$user->save();
+				echo html::image('images/forum/post.png', array('class' => 'icon2'));
+				echo 'Message non lu';
+			}
+			?>
+		</div>
+		
+		<div class="title">
+			<?php
+			if ($first_comment)
+			{
+				echo $topic->title;
+				echo $topic->display_view_tags();
+			}
+			?>
+		</div>
+		
+		<div class="text">
+			<?php 
+			//$textile = new Textile;
+			//$content = $textile->TextileThis($comment->content);
+			echo nl2br($comment->content);
+			?>
+		</div>
+		
+		<?php if ( ! $first_comment and $comment->user_id == $user->id): ?>
+			<div class="form">
+				<div class="reply2">
+				<?php echo form::open('comments/' . $comment->id . '/edit') ?>
+				<div class="textarea"><?php echo form::textarea('content-edit', $comment->content) ?></div>
+				<div class="submit">
+					<div class="button blue submit" id="c<?php echo $comment->id ?>">Modifier</div><br />
+					<div class="button grey cancel" id="c<?php echo $comment->id ?>">Annuler</div>
+				</div>
+				<?php echo form::close() ?>
+				</div>
+				<div class="clearleft"></div>
+			</div>
+		<?php endif; ?>
+		
+    	<div class="footer">	
+			<?php
+			
+			echo '<span class="date">' . date::display(max($comment->created, $comment->updated)) . '</span>';
+			
+			if ($comment->updated > $comment->created) 
+			{
+				echo ' (modification)';
+			}
+			
+			if ($first_comment and $topic->allow($user, 'w'))
+			{
+				echo ' · ' . html::anchor('topics/' . $topic->id . '/edit', 'Modifier');   		
+			}
+			else if ( ! $first_comment and $comment->user_id == $user->id)
+			{
+				echo ' · ' . html::anchor('#', 'Modifier', array('class' => 'edit'));   		
+			}
+						
+			$nb_interests = $this->db
+				->where('comment_id', $comment->id)
+				->count_records('comments_favorites');
+			
+			$hidden = ($nb_interests == 0) ? 'hidden' : '';
+			$favtext = ($user->has(ORM::factory('c_favorite', $comment->id))) ? 'new': 'empty';
+			
+			if ($user->loaded or $nb_interests > 0)
+			{
+				echo '<span id="nbfavs' . $comment->id . 'w" class="nbfavsw '.$hidden.'">';
+				echo ' &nbsp; <span id="nbfavs' . $comment->id . '" class="nbfavs favon">+' . $nb_interests . '</span>';
+		      	echo '</span>';
+			}
+				      	
+	      	if ($user->loaded)
+	      	{
+		      	echo '<span class="favw" style="display: none;">';
+		      	echo ' &nbsp; ' . html::image('images/forum/star-' . $favtext . '.png', array('id' => 'fav' . $comment->id, 'class' => 'fav icon'));
+				echo '</span>';
+			}
+				      	
+			/*if ( $comment->topic->allow($user, 'w') ) 
+			{
+				echo ' · ' . html::anchor('#', 'éditer');
+				echo ' · ' . html::anchor('#', 'supprimer');
+			}*/
+			?>
+		</div>
+    </div>
+    <div class="clearleft"></div>
+</div>

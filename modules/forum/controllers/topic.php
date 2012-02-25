@@ -54,6 +54,7 @@ class Topic_Controller extends Template_Controller
 		$this->template->content = View::factory('topics/view')
 			->bind('topic', $topic)
 			->bind('comments', $comments)
+			->bind('nbr_comments', $nbr_comments)
 			->bind('user', $user)
 			->bind('pagination', $pagination);
 		
@@ -70,12 +71,12 @@ class Topic_Controller extends Template_Controller
 		
 		$comments = ORM::factory('comment')
 			->where('topic_id', $topic->id)
-			->find_all($comments_per_page, ($num-1)*$comments_per_page);
-		$nbr_comments = $this->db->count_last_query();
+			->find_all($comments_per_page, ($num-1)*$comments_per_page + 1);
+		$nbr_comments = $this->db->count_last_query() - 1;
 			
 		$pagination = new Pagination(array(
 		    'uri_segment' 		=> 'page', 
-		    'total_items' 		=> $nbr_comments - 1,
+		    'total_items' 		=> $nbr_comments,
 		    'items_per_page' 	=> $comments_per_page, 
 		    'style' 			=> 'punbb'
 		));
