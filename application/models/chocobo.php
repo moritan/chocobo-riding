@@ -53,15 +53,15 @@ class Chocobo_Model extends ORM {
 	// ajout d'exp au chocobo (+montée de niveau, +montée de classe)
 	public function set_exp ($exp) 
 	{
-		$this->xp += $exp;
+		$this->exp += $exp;
 		if ($this->level < $this->level_max)
 		{
 			$level_next = $this->level + 1;
 			$exp_min = 50 * ($level_next - 1);
-			if ($this->xp >= $exp_min)
+			if ($this->exp >= $exp_min)
 			{
 				// ++ niveau
-				$this->xp -= $exp_min;
+				$this->exp -= $exp_min;
 				$this->level ++;
 				$this->apts ++;
 				
