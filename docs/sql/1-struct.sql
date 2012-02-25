@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Mar 21 Février 2012 à 17:55
+-- Généré le : Dim 26 Février 2012 à 00:28
 -- Version du serveur: 5.5.9
 -- Version de PHP: 5.3.6
 
@@ -41,7 +41,7 @@ CREATE TABLE `chocobos` (
   `speed` int(3) unsigned NOT NULL DEFAULT '6',
   `intel` int(3) unsigned NOT NULL DEFAULT '6',
   `endur` int(3) unsigned NOT NULL DEFAULT '6',
-  `apts` int(3) unsigned NOT NULL,
+  `apts` int(3) unsigned NOT NULL DEFAULT '2',
   `birthday` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Ensemble des chocobos';
@@ -334,6 +334,7 @@ CREATE TABLE `results` (
   `position` int(10) unsigned NOT NULL,
   `tours` int(10) unsigned NOT NULL,
   `avg_speed` float unsigned NOT NULL,
+  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `seen` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
