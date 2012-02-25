@@ -35,6 +35,12 @@ class Race_Model extends ORM {
 		$this->save();
 	}
 	
+	// Affiche la classe
+	public function classe()
+	{
+		return Kohana::lang('chocobo.classes.'. $this->classe);
+	}
+	
 	// (Void) supprime une course
 	public function delete ()
 	{
