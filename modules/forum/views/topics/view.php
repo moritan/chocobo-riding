@@ -1,11 +1,12 @@
 <style>
-	.infos {margin: 20px 0 0 0; border-bottom: 1px solid #ddd;}
+	.infos {margin: 20px 0 0 0;}
 	.infos .pages {color: #999; font-weight: bold; float: right; font-size: 16px;}
 	.infos .nbr_topics {font-size: 16px;}
 	.infos .nbr_topics .nbr {color: #999;}
 	
-	.comments {width: 100%; margin: 0 0 20px 0; color: #333;}
-	.comment {border-bottom: 1px solid #e9e9e9;}
+	.comments {width: 100%; margin: 0 0 20px 0; color: #333; border-bottom: 1px solid #e9e9e9;}
+	.solidborder {border-top: 1px solid #e9e9e9;}
+	.dottedborder {border-top: 1px dotted #f5f5f5;}
 	.comment .avatar {width: 64px; float: left; margin: 14px 0 0 18px;}
 	.comment .right {width: 650px; float: left; margin: 14px 0 14px 14px;}
 	.comment .author {margin: 1px 0 1px 0; font-weight: bold;}

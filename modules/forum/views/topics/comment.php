@@ -1,10 +1,11 @@
 <?php
 $first_comment = ($topic->comments[0]->id == $comment->id);
 $different_user = ($last_user_id !== $comment->user_id);
+$border = ($different_user) ? 'solidborder': 'dottedborder';
 ?>
 
 <div id="c<?php echo $comment->id ?>"></div>
-<div class="comment">
+<div class="comment <?php echo $border ?>">
 	<div class="avatar">
 		<?php
 		if ($different_user) 
