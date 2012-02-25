@@ -249,7 +249,7 @@
 			setTimeout(function(){
 				var timer = $('.timer').text();
 				$('.timer').text('FIN (' + timer + ')');
-				$('.results').slideDown();
+				$('.show_results').trigger('click');
 			}, this.timer);
 		};
 		
