@@ -82,8 +82,15 @@ class Race_Controller extends Template_Controller
 				$s->run($race);
 			} 
 			
+			foreach ($race->results as $result)
+			{
+				$result = $result->as_array();
+				$results[] = $result;
+			}
+			
 			$this->template->content = View::factory("races/results")
 				->bind('race', $race)
+				->bind('results', $results)
 				->bind('user', $user);
 		} 
 		else 
