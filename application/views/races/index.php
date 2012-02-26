@@ -7,6 +7,13 @@
 	.race-length {width: 70px; text-align: center;}
 	.race-bonus {}
 	.races-chocobos {}
+	
+	.results {width: 100%; border-bottom: 1px solid #e4e4e4;}
+	.result {height: 40px; border-top: 1px solid #e4e4e4;}
+	.result .options_img {width: 13px; height: 13px; float: right; margin: 3px 5px 0 0;}
+	.result .options_div {display: none; width: 100px; float: right; border: 1px solid #ddd; clear: right;}
+	.result .options_div a, .result .options_div a:visited {display: block; width: 100%; text-decoration: none; color: #333; padding: 3px;}
+	.result .options_div a:hover {background-color: #009; color: #fff;}
 </style>
 
 <h1>Courses de classe <?php echo Kohana::lang("chocobo.classes.$classe"); ?></h1>
@@ -52,9 +59,14 @@
 
 <div class="results">
 	<?php foreach ($results as $result): ?>
-		<div class="result">
+		<div class="result" id="result<?php echo $result->race->id ?>">
+			<?php echo html::image('images/icons/options_default.png', array('class' => 'options_img')) ?>
+			<div class="options_div">
+				<?php echo html::anchor('#', 'Supprimer', array('class' => 'delete_result', 'id'=>'race' . $result->race->id)); ?>
+			</div>
 			<div><?php echo $result->race->id . '. ' . html::anchor('races/' . $result->race->id, $result->race->location->ref) ?></div>
 		</div>
+		<div class="clearLeft"></div>
 	<?php endforeach; ?>
 </div>
 
@@ -64,6 +76,8 @@
 
 <script>
 
+var opened = 0;
+
 $(function(){
 	
 	$('.race-id').click(function(){
@@ -71,6 +85,39 @@ $(function(){
 		location.href = baseUrl + 'races/' + id;
 	});
 	
+	$('.options_img')
+		.hover(
+			function(){
+				$(this).attr('src', baseUrl + 'images/icons/options_hover.png');
+				$(this).css('cursor', 'pointer');
+			}, 
+			function(){
+				$(this).attr('src', baseUrl + 'images/icons/options_default.png');
+				$(this).css('cursor', 'normal');
+			}
+		)
+		.click(function(){
+			$('.options_div').hide();
+			$(this).next().show();
+		});
+		
+	$('.delete_result')
+		.click(function(){
+			var race_id = $(this).attr('id').substring(4);
+			$(this).parent().hide();
+			$.post(baseUrl + 'races/delete', {'id': race_id}, function(data){
+				if (data.success) {
+					$('#result' + race_id).slideUp();
+				}
+			});
+			return false;
+		});
+	
+	$("body").click(function(e){
+		if ( ! $(e.target).hasClass('options_img')) {
+			$('.options_div').hide();
+		}
+	});
 });
 
 </script>

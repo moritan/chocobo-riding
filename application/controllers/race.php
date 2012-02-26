@@ -247,5 +247,62 @@ class Race_Controller extends Template_Controller
 			'success' => empty($msg)
 		);
 	}
+	
+	/**
+	 * Supprime l'historique de course du chocobo en session
+	 * et supprime la course si tous les autres participants
+	 * l'ont fait.
+	 *
+	 * @return	void|string		Redirige ou retourne du texte si c'est en ajax
+	 */
+	public function delete ()
+	{
+		$user = $this->session->get('user');
+		
+		$errors = array();
+		
+		$id = $this->input->post('id', 0);
+		
+		$result = ORM::factory('result')
+			->where('chocobo_id', $user->chocobo->id)
+			->where('race_id', $id)
+			->find();
+			
+		if ($result->loaded)
+		{
+			$nbr_results = ORM::factory('result')
+				->where('race_id', $id)
+				->count_all();
+			
+			$result->deleted = TRUE;
+			$result->save();
+			
+			$nbr_results --;
+			
+			if ($nbr_results == 0)
+			{
+				ORM::factory('race', $id)->delete();
+			}
+		} 
+		else
+		{
+			$errors[] = 'result_not_found';
+		}
+		
+		if ( ! request::is_ajax()) 
+		{
+			url::redirect('races');
+		}
+		else
+		{
+			$res['success'] = empty($errors);
+			$res['errors'] = $errors;
+			echo json_encode($res);
+			
+			$this->profiler->disable();
+            $this->auto_render = false;
+            header('content-type: application/json');
+		}
+	}
 
 }

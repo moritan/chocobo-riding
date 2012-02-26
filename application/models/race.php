@@ -54,6 +54,11 @@ class Race_Model extends ORM {
 			$item->delete();
 		}
 		
+		foreach($this->results as $item)
+		{
+			$item->delete();
+		}
+		
 		parent::delete();
 	}
 	
