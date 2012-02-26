@@ -7,7 +7,8 @@ class Race_Controller extends Template_Controller
 	{
 		$this->template->content = View::factory("races/index")
 			->bind('classe', $classe)
-			->bind('races', $races);
+			->bind('races', $races)
+			->bind('results', $results);
 		
 		// Détection de le classe du chocobo en session
 		$user = $this->session->get('user');
@@ -51,6 +52,12 @@ class Race_Controller extends Template_Controller
 			->where('classe', $classe)
 			->where('scheduled >', $date)
 			->find_all();
+			
+		$results = ORM::factory('result')
+			->where('chocobo_id', $user->chocobo->id)
+			->where('deleted', FALSE)
+			->orderby('id', 'desc')
+			->find_all();
 	}
 	
 	public function view ( $id = null )
@@ -82,8 +89,15 @@ class Race_Controller extends Template_Controller
 				$s->run($race);
 			} 
 			
+			foreach ($race->results as $result)
+			{
+				$result = $result->as_array();
+				$results[] = $result;
+			}
+			
 			$this->template->content = View::factory("races/results")
 				->bind('race', $race)
+				->bind('results', $results)
 				->bind('user', $user);
 		} 
 		else 
@@ -109,9 +123,6 @@ class Race_Controller extends Template_Controller
 		$race = ORM::factory('race', $id);
 		
 		$r = $this->_can_register($chocobo, $race);
-		
-		// TEMPORAIRE: pour empêcher les joueurs d efaire des courses
-		$r['success'] = FALSE;
 		
 		if ($r['success'])
 		{
@@ -235,6 +246,63 @@ class Race_Controller extends Template_Controller
 			'msg' => $msg,
 			'success' => empty($msg)
 		);
+	}
+	
+	/**
+	 * Supprime l'historique de course du chocobo en session
+	 * et supprime la course si tous les autres participants
+	 * l'ont fait.
+	 *
+	 * @return	void|string		Redirige ou retourne du texte si c'est en ajax
+	 */
+	public function delete ()
+	{
+		$user = $this->session->get('user');
+		
+		$errors = array();
+		
+		$id = $this->input->post('id', 0);
+		
+		$result = ORM::factory('result')
+			->where('chocobo_id', $user->chocobo->id)
+			->where('race_id', $id)
+			->find();
+			
+		if ($result->loaded)
+		{
+			$nbr_results = ORM::factory('result')
+				->where('race_id', $id)
+				->count_all();
+			
+			$result->deleted = TRUE;
+			$result->save();
+			
+			$nbr_results --;
+			
+			if ($nbr_results == 0)
+			{
+				ORM::factory('race', $id)->delete();
+			}
+		} 
+		else
+		{
+			$errors[] = 'result_not_found';
+		}
+		
+		if ( ! request::is_ajax()) 
+		{
+			url::redirect('races');
+		}
+		else
+		{
+			$res['success'] = empty($errors);
+			$res['errors'] = $errors;
+			echo json_encode($res);
+			
+			$this->profiler->disable();
+            $this->auto_render = false;
+            header('content-type: application/json');
+		}
 	}
 
 }

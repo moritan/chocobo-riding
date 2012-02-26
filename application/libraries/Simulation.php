@@ -67,6 +67,7 @@ class Simulation {
 			$infos['distance'] = 0;
 			$infos['course_last'] = 0;
 			$infos['course_cumul'] = 0;
+			$infos['box'] = $nbr_chocobos + 1;
 			$infos['tours'] = 0;
 			$infos['allure'] = 'normal';
 			$infos['course_min'] = 1;
@@ -99,7 +100,7 @@ class Simulation {
 			$tour++;
 			
 			// réordonne les chocobos selon leur initiative
-			//$this->order($chocobos);
+			// arr::order($chocobos, 'initiative', 'desc');
 			
 			// initialistion des scripts
 			$script_point = array();
@@ -181,6 +182,7 @@ class Simulation {
 			$result->race_id = $race->id;
 			$result->chocobo_id = $chocobo['id'];
 			$result->name = $chocobo['name'];
+			$result->box = $chocobo['box'];
 			$result->position = $chocobo['position'];
 			$result->tours = $chocobo['tours'];
 			$result->avg_speed = $chocobo['course_cumul'] / $chocobo['tours'];
@@ -198,16 +200,6 @@ class Simulation {
 		
 		$race->script = '{chocobos:' . $script_chocobos . ',tours:' . $script_tours  . '}';
 		$race->save();
-	}
-	
-	// réordonne les chocobos par initiative
-	public function order($chocobos)
-	{
-		foreach ($chocobos as $key) {
-	        $sort_initiative[] = $key['initiative'];
-	    }
-	
-	    array_multisort($sort_initiative, SORT_DESC, $chocobos);
 	}
 
 }
