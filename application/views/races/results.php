@@ -81,22 +81,24 @@
 	</div>
 	
 	<div class="results">
-		<?php foreach ($race->orderby('position', 'asc')->results as $result): ?>
+		<?php 
+		arr::order($results, 'position', 'asc');
+		foreach ($results as $result): ?>
 		
 			<div class="box">
 				<div class="position">
-					<?php echo $result->position?>
+					<?php echo $result['position'] ?>
 				</div>
 				<div class="chocobo">
-					<?php echo $result->name ?>
+					<?php echo $result['name'] ?>
 				</div>
 				<div class="chrono">
 					<?php echo html::image('images/icons/clock.png', array('class' => 'icon')) ?> 
-					<?php echo $result->chrono() ?>
+					<?php echo chrono::display($result['tours']) ?>
 				</div>
 				<div class="speed">
 					<?php echo html::image('images/icons/speed.jpg', array('class' => 'icon')) ?>
-					<?php echo number_format($result->avg_speed, 2, '.', '') ?> m/s
+					<?php echo number_format($result['avg_speed'], 2, '.', '') ?> m/s
 				</div>
 				<div class="clearLeft"></div>
 			</div>
@@ -112,11 +114,13 @@
 <div class="simulation">
 		
 	<div style="height: 48px;"></div>
-	<?php foreach ($race->results as $result): ?>
+	<?php 
+	arr::order($results, 'box', 'asc');
+	foreach ($results as $result): ?>
 	
 		<div class="box">
-			<span class="label"><?php echo $result->name ?></span> 
-			<div id="<?php echo $result->name ?>">
+			<span class="label"><?php echo $result['name'] ?></span> 
+			<div id="<?php echo $result['name'] ?>">
 				<?php echo html::image('images/race/waiting.png', array('class' => 'allure')) ?>
 				<span class="event">
 					<span class="distance"></span>
