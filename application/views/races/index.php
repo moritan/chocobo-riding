@@ -48,6 +48,16 @@
 
 <br /><br />
 
+<h2>Historique des courses</h2>
+
+<div class="results">
+	<?php foreach ($results as $result): ?>
+		<div class="result">
+			<div><?php echo $result->race->id . '. ' . html::anchor('races/' . $result->race->id, $result->race->location->ref) ?></div>
+		</div>
+	<?php endforeach; ?>
+</div>
+
 <?php
 //echo '+ ' . html::anchor('races/new', 'Organiser une course');
 ?>

@@ -7,7 +7,8 @@ class Race_Controller extends Template_Controller
 	{
 		$this->template->content = View::factory("races/index")
 			->bind('classe', $classe)
-			->bind('races', $races);
+			->bind('races', $races)
+			->bind('results', $results);
 		
 		// Détection de le classe du chocobo en session
 		$user = $this->session->get('user');
@@ -50,6 +51,12 @@ class Race_Controller extends Template_Controller
 		$races = ORM::factory('race')
 			->where('classe', $classe)
 			->where('scheduled >', $date)
+			->find_all();
+			
+		$results = ORM::factory('result')
+			->where('chocobo_id', $user->chocobo->id)
+			->where('deleted', FALSE)
+			->orderby('id', 'desc')
 			->find_all();
 	}
 	
