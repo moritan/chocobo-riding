@@ -4,8 +4,23 @@ $different_user = ($last_user_id !== $comment->user_id);
 $border = ($different_user) ? 'solidborder': 'dottedborder';
 ?>
 
-<div id="c<?php echo $comment->id ?>"></div>
-<div class="comment <?php echo $border ?>">
+<div class="comment <?php echo $border ?>" id="comment<?php echo $comment->id ?>">
+	<div class="options">
+		<?php
+		if ($first_comment and $topic->allow($user, 'w'))
+		{
+			echo html::anchor('topics/' . $topic->id . '/edit', 
+				html::image('images/icons/edit.png', array('class' => 'icon', 'title' => 'Modifier', 'rel' => 'tipsy'))) . ' | ';
+			echo html::anchor('#', 
+				html::image('images/icons/delete.png', array('class' => 'icon', 'title' => 'Supprimer', 'rel' => 'tipsy')), 
+					array('class' => 'delete_topic', 'id'=>'topic' . $topic->id)); 		
+		}
+		else if ( ! $first_comment and $comment->user_id == $user->id)
+		{
+			echo html::anchor('#', html::image('images/icons/edit.png', array('class' => 'icon', 'title' => 'Modifier', 'rel' => 'tipsy')), array('class' => 'edit', 'id' => 'edit' . $comment->id));
+		}
+		?>
+	</div>
 	<div class="avatar">
 		<?php
 		if ($different_user) 
@@ -79,15 +94,6 @@ $border = ($different_user) ? 'solidborder': 'dottedborder';
 				echo ' (modification)';
 			}
 			
-			if ($first_comment and $topic->allow($user, 'w'))
-			{
-				echo ' · ' . html::anchor('topics/' . $topic->id . '/edit', 'Modifier');   		
-			}
-			else if ( ! $first_comment and $comment->user_id == $user->id)
-			{
-				echo ' · ' . html::anchor('#', 'Modifier', array('class' => 'edit'));   		
-			}
-						
 			$nb_interests = $this->db
 				->where('comment_id', $comment->id)
 				->count_records('comments_favorites');

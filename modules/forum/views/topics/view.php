@@ -7,6 +7,7 @@
 	.comments {width: 100%; margin: 0 0 20px 0; color: #333; border-bottom: 1px solid #e9e9e9;}
 	.solidborder {border-top: 1px solid #e9e9e9;}
 	.dottedborder {border-top: 1px dotted #f5f5f5;}
+	.comment {position: relative;}
 	.comment .avatar {width: 64px; float: left; margin: 14px 0 0 18px;}
 	.comment .right {width: 650px; float: left; margin: 14px 0 14px 14px;}
 	.comment .author {margin: 1px 0 1px 0; font-weight: bold;}
@@ -129,16 +130,20 @@ echo View::factory('topics/comment')
 
 $(function(){
 
+	$('*[rel=tipsy]').tipsy({gravity: 's'});
+	
 	// Afficher les +1/-1
 	$('.comment').hover(function(){
 		$(this).find('.nbfavsw').show();
 		$(this).find('.favw').show();
+		$(this).find('.options').fadeIn();
 	}, function(){
 		var nbfavsw = $(this).find('.nbfavs');
 		if (nbfavsw.text() == '+0') {
 			$(this).find('.nbfavsw').hide();
 		}
 		$(this).find('.favw').hide();
+		$(this).find('.options').hide();
 	});
 	
 	// mettre en favori un topic
@@ -161,9 +166,9 @@ $(function(){
 	});
 	
 	$('.edit').click(function(){
-		$(this).parent().hide();
-		$(this).parent().prev().show();
-		$(this).parent().prev().prev().hide();
+		var comment_id = $(this).attr('id').substring(4);
+		$('#comment' + comment_id).find('.text').toggle();
+		$('#comment' + comment_id).find('.form').toggle();
 		return false;
 	});
 	
@@ -184,6 +189,16 @@ $(function(){
 		$('#' + id + ' .form').hide();
 		$('#' + id + ' .text').show();
 		$('#' + id + ' .footer').show();
+		return false;
+	});
+	
+	$('.delete_topic').click(function(){
+		var topic_id = $(this).attr('id').substring(5);
+		$.post(baseUrl + 'topics/delete', {'id': topic_id}, function(data){
+			if (data.success) {
+				location.href = baseUrl + 'topics';
+			}
+		});
 		return false;
 	});
 	

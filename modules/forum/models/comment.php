@@ -36,11 +36,11 @@ class Comment_Model extends ORM {
 		
 		if ($page == 1)
 		{
-			return 'topics/' . $this->topic_id . '#c' . $this->id;
+			return 'topics/' . $this->topic_id . '#comment' . $this->id;
 		}
 		else
 		{
-			return 'topics/' . $this->topic_id . '/page/' . $page . '#c' . $this->id;
+			return 'topics/' . $this->topic_id . '/page/' . $page . '#comment' . $this->id;
 		}
 	}
 	
