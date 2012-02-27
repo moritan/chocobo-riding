@@ -17,10 +17,6 @@
 	
 	.topic .favon {font-weight: bold; font-style: italic; color: #333;}
 	.topic .hidden {display: none;}
-	
-	.options {position: absolute; top: 14px; right: 5px; display: none; width: 250px; text-align: right; padding-right: 5px;}
-	.options a, .options a:visited {text-decoration: none; color: #666; font-style: italic;}
-	.options a:hover {text-decoration: underline;}
 </style>
 
 <h1>Forum</h1>

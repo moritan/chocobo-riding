@@ -167,3 +167,7 @@ a.button.blue:hover {text-decoration: none;}
 	background-image: -o-linear-gradient(top,#4d90fE,#357ae8);
 	background-image: linear-gradient(top,#4d90fE,#357ae8);
 }
+
+.options {position: absolute; top: 14px; right: 5px; display: none; width: 250px; text-align: right; padding-right: 5px;}
+.options a, .options a:visited {text-decoration: none; color: #666; font-style: italic;}
+.options a:hover {text-decoration: underline;}

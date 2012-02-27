@@ -9,10 +9,7 @@
 	.races-chocobos {}
 	
 	.results {width: 100%; border-bottom: 1px solid #e4e4e4;}
-	.result {height: 40px; border-top: 1px solid #e4e4e4;}
-	.result .options_div {display: none; width: 100px; float: right; border: 1px solid #ddd; clear: right; padding: 3px 0 3px 0; background-color: #fff;}
-	.result .options_div a, .result .options_div a:visited {display: block; width: 90px; text-decoration: none; color: #333; padding: 5px;}
-	.result .options_div a:hover {background-color: #f5f5f5;}
+	.result {height: 40px; border-top: 1px solid #e4e4e4; position: relative;}
 </style>
 
 <h1>Courses de classe <?php echo Kohana::lang("chocobo.classes.$classe"); ?></h1>
@@ -59,9 +56,13 @@
 <div class="results">
 	<?php foreach ($results as $result): ?>
 		<div class="result" id="result<?php echo $result->race->id ?>">
-			<?php echo html::image('images/icons/options_default.png', array('class' => 'options_img')) ?>
-			<div class="options_div">
-				<?php echo html::anchor('#', 'Supprimer', array('class' => 'delete_result', 'id'=>'race' . $result->race->id)); ?>
+			<div class="options">
+				<?php 
+					echo html::anchor('#', 
+					html::image('images/icons/delete.png', array('class' => 'icon', 'title' => 'Supprimer', 'rel' => 'tipsy')), 
+						array('class' => 'delete_result', 'id'=>'race' . $result->race->id));
+			
+				?>
 			</div>
 			<div><?php echo $result->race->id . '. ' . html::anchor('races/' . $result->race->id, $result->race->location->ref) ?></div>
 		</div>
@@ -79,30 +80,19 @@ var opened = 0;
 
 $(function(){
 	
+	$('*[rel=tipsy]').tipsy({gravity: 's'});
+	
 	$('.race-id').click(function(){
 		var id = $(this).attr('id').substring(1);
 		location.href = baseUrl + 'races/' + id;
 	});
 	
-	$('.options_img')
-		.hover(
-			function(){
-				$(this).attr('src', baseUrl + 'images/icons/options_hover.png');
-				$(this).css('cursor', 'pointer');
-			}, 
-			function(){
-				$(this).attr('src', baseUrl + 'images/icons/options_default.png');
-				$(this).css('cursor', 'normal');
-			}
-		)
-		.click(function(){
-			var opened = $(this).next().is(':visible');
-			$('.options_div').hide();
-			if ( ! opened) {
-				$(this).next().toggle();
-			}
-		});
-		
+	$('.result').hover(function(){
+		$(this).find('.options').fadeIn('slow');
+	}, function(){
+		$(this).find('.options').hide();
+	});
+	
 	$('.delete_result')
 		.click(function(){
 			var race_id = $(this).attr('id').substring(4);
@@ -115,11 +105,6 @@ $(function(){
 			return false;
 		});
 	
-	$("body").click(function(e){
-		if ( ! $(e.target).hasClass('options_img')) {
-			$('.options_div').hide();
-		}
-	});
 });
 
 </script>
