@@ -10,7 +10,6 @@
 	
 	.results {width: 100%; border-bottom: 1px solid #e4e4e4;}
 	.result {height: 40px; border-top: 1px solid #e4e4e4;}
-	.result .options_img {width: 13px; height: 13px; float: right; margin: 3px 5px 0 0;}
 	.result .options_div {display: none; width: 100px; float: right; border: 1px solid #ddd; clear: right; padding: 3px 0 3px 0; background-color: #fff;}
 	.result .options_div a, .result .options_div a:visited {display: block; width: 90px; text-decoration: none; color: #333; padding: 5px;}
 	.result .options_div a:hover {background-color: #f5f5f5;}

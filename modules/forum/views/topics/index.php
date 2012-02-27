@@ -5,8 +5,7 @@
 	.infos .nbr_topics .nbr {color: #999;}
 	
 	.topics {width: 100%; margin: 0 0 20px 0;}
-	.topic {border-bottom: 1px solid #ddd;}
-	.topic:hover {background-color: #f5f5f5;}
+	.topic {border-bottom: 1px solid #ddd; position: relative;}
 	.topic .left {width: 64px; float: left; margin: 14px 0 0 18px;}
 	.topic .right {width: 650px; float: left; margin: 14px 0 14px 14px;}
 	.topic .author {margin: 1px 0 1px 0;}
@@ -18,6 +17,10 @@
 	
 	.topic .favon {font-weight: bold; font-style: italic; color: #333;}
 	.topic .hidden {display: none;}
+	
+	.options {position: absolute; top: 14px; right: 5px; display: none; width: 250px; text-align: right; padding-right: 5px;}
+	.options a, .options a:visited {text-decoration: none; color: #666; font-style: italic;}
+	.options a:hover {text-decoration: underline;}
 </style>
 
 <h1>Forum</h1>
@@ -55,7 +58,19 @@
 		$notified = false;
 	?>
 		
-	<div class="topic">
+	<div class="topic" id="topic<?php echo $topic->id ?>">
+		<div class="options">
+			<?php
+			if ($topic->allow($user, 'w'))
+			{
+				echo html::anchor('topics/' . $topic->id . '/edit', 
+					html::image('images/icons/edit.png', array('class' => 'icon', 'title' => 'Modifier', 'rel' => 'tipsy'))) . ' | ';
+				echo html::anchor('#', 
+					html::image('images/icons/delete.png', array('class' => 'icon', 'title' => 'Supprimer', 'rel' => 'tipsy')), 
+						array('class' => 'delete_topic', 'id'=>'topic' . $topic->id));
+			}
+			?>
+		</div>
 		<div class="left">
 			<?php echo $last_comment->user->picture(50) ?>
     	</div>
@@ -103,12 +118,7 @@
 				{
 					echo ' (modification)';
 				}
-								
-	    		if ($topic->allow($user, 'w'))
-				{
-					echo ' · ' . html::anchor('topics/' . $topic->id . '/edit', 'Modifier');   		
-				}
-	    		
+				
 	    		$nb_interests = $this->db
 					->where('comment_id', $first_comment->id)
 					->count_records('comments_favorites');
@@ -152,16 +162,20 @@ if ($user->loaded)
 <script>
 $(document).ready(function(){
 
+	$('*[rel=tipsy]').tipsy({gravity: 's'});
+	
 	// Afficher les +1/-1
 	$('.topic').hover(function(){
 		$(this).find('.nbfavsw').show();
 		$(this).find('.favw').show();
+		$(this).find('.options').fadeIn('slow');
 	}, function(){
 		var nbfavsw = $(this).find('.nbfavs');
 		if (nbfavsw.text() == '+0') {
 			$(this).find('.nbfavsw').hide();
 		}
 		$(this).find('.favw').hide();
+		$(this).find('.options').hide();
 	});
 	
 	// mettre en favori un topic
@@ -182,6 +196,17 @@ $(document).ready(function(){
 		});
 		return false;
 	});
+		
+	$('.delete_topic')
+		.click(function(){
+			var topic_id = $(this).attr('id').substring(5);
+			$.post(baseUrl + 'topics/delete', {'id': topic_id}, function(data){
+				if (data.success) {
+					$('#topic' + topic_id).slideUp();
+				}
+			});
+			return false;
+		});
 
 });
 </script>

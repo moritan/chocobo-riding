@@ -14,6 +14,8 @@ $config['topics/([0-9]+)/page/([0-9]+)'] = "topic/view/$1/page/$2";
 
 $config['topics/([0-9]+)/edit'] = "topic/edit/$1";
 
+$config['topics/delete'] = "topic/delete";
+
 // dscussions
 $config['discussions'] = 'discussion/index';
 $config['discussions/page/([0-9]+)'] = "discussion/index/page/$1";

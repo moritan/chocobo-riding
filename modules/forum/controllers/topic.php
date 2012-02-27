@@ -19,7 +19,8 @@ class Topic_Controller extends Template_Controller
 		$topics_per_page = Kohana::config('topic.topics_per_page');
 		
 		$this->db->select('to.id');
-		$this->db->from('topics AS to');					
+		$this->db->from('topics AS to');
+		$this->db->where('to.archived', FALSE);
 		
 		if ($tags != 'all')
 		{
@@ -180,6 +181,53 @@ class Topic_Controller extends Template_Controller
             	$form = arr::overwrite($form, $post->as_array());
 	        	$errors = arr::overwrite($errors, $post->errors('form_error_messages'));
             }
+		}
+	}
+	
+	/**
+	 * Archive un sujet
+	 *
+	 * @return mixed
+	 */
+	public function delete ()
+	{
+		$user = $this->session->get('user');
+		
+		$errors = array();
+		
+		$id = $this->input->post('id', 0);
+		
+		$topic = ORM::factory('topic', $id);
+			
+		if ( ! $topic->loaded)
+		{
+			$errors[] = 'topic_not_found';
+		}
+		
+		if ( ! $topic->allow($user, 'w'))
+		{
+			$errors[] = 'user_not_allowed';
+		}
+		
+		if (empty($errors))
+		{
+			$topic->archived = TRUE;
+			$topic->save();
+		}
+		
+		if ( ! request::is_ajax()) 
+		{
+			url::redirect('topics');
+		}
+		else
+		{
+			$res['success'] = empty($errors);
+			$res['errors'] = $errors;
+			echo json_encode($res);
+			
+			$this->profiler->disable();
+            $this->auto_render = false;
+            header('content-type: application/json');
 		}
 	}
 }
