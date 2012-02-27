@@ -93,7 +93,7 @@
 					<?php echo $result['name'] ?>
 				</div>
 				<div class="chrono">
-					<?php echo html::image('images/icons/clock.png', array('class' => 'icon')) ?> 
+					<?php echo html::image('images/icons/clock.png', array('class' => 'icon12')) ?> 
 					<?php echo chrono::display($result['tours']) ?>
 				</div>
 				<div class="speed">
