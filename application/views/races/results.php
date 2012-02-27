@@ -14,7 +14,7 @@
 	.results .chrono {float: left; width: 150px;}
 	.results .speed {float: left; width: 150px;}
 	
-	.controls {width: 500px; margin: auto; text-align: center; font-style: italic; padding: 3px 0 3px 0;}
+	.controls {width: 500px; margin: auto; text-align: center; padding: 3px 0 3px 0;}
 	
 	.simulation {
 		background: url("../images/locations/midgar.jpg") no-repeat;
@@ -50,7 +50,11 @@
 	.simulation .speed {color: #999;}
 	.simulation .title {font-weight: bold;}
 	
+	#timer {}
+	#slowmotion {font-style: italic; display: none;}
+	
 	.icon {margin-bottom: -3px;}
+	.icon12 {cursor: pointer;}
 	.clear {clear: both;}
 </style>
 
@@ -107,7 +111,14 @@
 	</div>
 	
 	<div class="controls">
-		<?php echo html::anchor('#', 'Montrer les résultats', array('class' => 'show_results')) ?>
+		<?php
+		echo html::image('images/race/begin.png', array('class' => 'icon12 begin', 'title' => 'Aller au début', 'rel' => 'tipsy')) . ' | ';
+		echo html::image('images/race/pause.png', array('class' => 'icon12 pause', 'title' => 'Mettre en pause', 'rel' => 'tipsy')) . ' | ';
+		echo html::image('images/race/end.png', array('class' => 'icon12 end', 'title' => 'Aller à la fin', 'rel' => 'tipsy')) . '<br />';
+		echo html::image('images/icons/clock.png', array('class' => 'icon12'));
+		echo ' <span id="timer"></span>';
+		echo ' <span id="slowmotion">ralenti</span>';
+		?>
 	</div>
 </div>
 
@@ -138,14 +149,27 @@
 
 	$(function(){
 	
-		$('.show_results').click(function(){
-			$('.results').slideDown();
-			$('.controls').hide();
-			return false;
+		$('*[rel=tipsy]').tipsy({gravity: 's'});
+		
+		$('.begin').click(function(){
+			s.begin();
+		});
+		$('.pause').live('click', function(){
+			s.pause();
+			$(this).toggleClass('play pause');
+			$(this).attr('src', baseUrl + 'images/race/play.png');
+		});
+		$('.play').live('click', function(){
+			s.play();
+			$(this).toggleClass('play pause');
+			$(this).attr('src', baseUrl + 'images/race/pause.png');
+		});
+		$('.end').click(function(){
+			s.end();
 		});
 	
 	});
-	
+		
 	var Simulation = function (script, length) {
 		
 		this.tour = 0;
@@ -158,19 +182,22 @@
 		this.left_min = 100;
 		this.left_max = 550;
 		
+		this.maintimer = null;
 		this.timer = 1000;
 		
+		this.paused = false;
+		
 		this.start = function () {
-			setTimeout(function(){
-				$('.timer').text('3');
-				setTimeout(function(){
-					$('.timer').text('2');
-					setTimeout(function(){
-						$('.timer').text('1');
-						setTimeout(function(){
-							$('.timer').text('Partez !!!');
-							setTimeout(function(){
-								$('.timer').text('00:00');
+			this.maintimer = setTimeout(function(){
+				$('#timer').text('3');
+				s.maintimer = setTimeout(function(){
+					$('#timer').text('2');
+					s.maintimer = setTimeout(function(){
+						$('#timer').text('1');
+						s.maintimer = setTimeout(function(){
+							$('#timer').text('Partez !!!');
+							s.maintimer = setTimeout(function(){
+								$('#timer').text('00:00');
 								$('.allure').attr('src', baseUrl + 'images/race/normal.png');
 								s.nextTour();
 							}, s.timer);
@@ -181,7 +208,7 @@
 		};
 		
 		this.nextTour = function () {
-			setTimeout(function(){
+			this.maintimer = setTimeout(function(){
 				var points = s.tours[s.tour].points;
 				for (var j in points) {
 					var left = s.left_min + Math.floor(points[j].distance * s.left_max / s.length);
@@ -189,14 +216,16 @@
 					$('#' + points[j].chocobo + ' .allure').css('left', left);
 					$('.event').show();
 					$('#' + points[j].chocobo + ' .event').css('left', 50 + left);
-					$('#' + points[j].chocobo + ' .distance').text(Math.floor(points[j].distance) + 'm');
-					$('#' + points[j].chocobo + ' .speed').text(points[j].speed + ' m/s');
+					$('#' + points[j].chocobo + ' .distance').text(Math.floor(points[j].distance) + 'm').show();
+					$('#' + points[j].chocobo + ' .speed').text(points[j].speed + ' m/s').show();
+					$('#' + points[j].chocobo + ' .title').hide();
+				
 				}
 				if (s.tours[s.tour].events.length > 0) {
 					s.nextEvent(0);
 				} else {
 					s.tour++;
-					$('.timer').text(s.format(s.tour));
+					$('#timer').text(s.format(s.tour));
 					if (s.tour < s.tours.length) {
 						s.nextTour();
 					} else {
@@ -207,7 +236,8 @@
 		};
 		
 		this.nextEvent = function (nbr) {
-			setTimeout(function(){
+			$('#slowmotion').fadeIn();
+			this.maintimer = setTimeout(function(){
 				var event = s.tours[s.tour].events[nbr];
 				
 				$('#' + event.chocobo + ' .distance').hide();
@@ -217,18 +247,31 @@
 				
 				nbr++;
 				if (s.tours[s.tour].events[nbr] !== undefined) {
+					$('#slowmotion').fadeOut();
 					s.nextEvent(nbr);
 				} else {
 					s.tour++;
-					$('.timer').text(s.format(s.tour));
+					$('#timer').text(s.format(s.tour));
 					if (s.tour < s.tours.length) {
+						$('#slowmotion').fadeOut();
 						s.nextTour();
 					} else {
+						$('#slowmotion').fadeOut();
 						s.finish();
 					}				
 				}
 			}, this.timer);
 		};
+		
+		this.moveChocobos = function () {
+			var points = s.tours[s.tour].points;
+			for (var j in points) {
+				var left = s.left_min + Math.floor(points[j].distance * s.left_max / s.length);
+				$('#' + points[j].chocobo + ' .allure').attr('src', baseUrl + 'images/race/' + points[j].allure + '.png');
+				$('#' + points[j].chocobo + ' .allure').css('left', left);
+				$('.event').hide();
+			}
+		},
 		
 		this.format = function (nbr) {
 			var minutes = '00'
@@ -251,22 +294,50 @@
 		
 		this.finish = function () {
 			setTimeout(function(){
-				var timer = $('.timer').text();
-				$('.timer').text('FIN (' + timer + ')');
-				$('.show_results').trigger('click');
+				var tps = $('#timer').text();
+				$('#timer').text('FIN (' + tps + ')');
+				s.paused = true;
+				$('.pause').attr('src', baseUrl + 'images/race/play.png');
+				$('.pause').toggleClass('play pause');
+				$('.results').slideDown();
 			}, this.timer);
 		};
 		
-		this.play = function () {
+		this.begin = function () {
+			clearTimeout(this.maintimer);
+			this.tour = 0;
+			this.moveChocobos();
+			if ( ! this.paused) {
+				this.nextTour();
+			}
+		};
 		
+		this.play = function () {
+			this.paused = false;
+			if (this.tour == this.tours.length - 1) {
+				this.tour = 0;
+			}
+			this.moveChocobos();
+			this.nextTour();
 		};
 		
 		this.pause = function () {
-		
+			clearTimeout(this.maintimer);
+			this.paused = true;
+			if (this.tour > 0) { 
+				this.tour--;
+			}
+			this.moveChocobos();
 		};
 		
-		this.stop = function () {
-		
+		this.end = function () {
+			clearTimeout(this.maintimer);
+			this.paused = true;
+			$('.pause').attr('src', baseUrl + 'images/race/play.png');
+			$('.pause').toggleClass('play pause');
+			this.tour = this.tours.length - 1;
+			this.moveChocobos();
+			$('.results').slideDown();
 		};
 		
 	};
