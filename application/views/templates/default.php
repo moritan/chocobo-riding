@@ -9,6 +9,9 @@
 		<?php 
 			echo html::stylesheet('styles/default.css', 'screen', false);
 			echo html::script('javascripts/lib/jquery.min.js');
+			
+			echo html::stylesheet('javascripts/lib/tipsy/tipsy.css', 'screen', false);
+			echo html::script('javascripts/lib/tipsy/jquery.tipsy.js');
 		?>
 		
 		<script type="text/javascript">
