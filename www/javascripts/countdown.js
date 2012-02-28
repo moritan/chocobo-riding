@@ -18,7 +18,6 @@ var countdown = function (id, tps, end, title)
 		if (tps >= 0) {
 			secondes = tps % 60;
 			if (secondes<10) {secondes = '0' + secondes;}
-			secondes = ":" + secondes;
 		}
 		
 		if (title && tps < 60) {
@@ -28,7 +27,7 @@ var countdown = function (id, tps, end, title)
 		}
 		
 		if (title && ! $.browser.msie) {
-			$('title').text(minutes + secondes + ' - NEW CR');
+			$('title').text(minutes + ':' + secondes + ' - NEW CR');
 		}
 		
 		setTimeout(function(){
