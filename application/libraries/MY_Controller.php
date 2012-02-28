@@ -39,6 +39,39 @@ class Controller extends Controller_Core
 			{
 				url::redirect('chocobo/edit');
 			}
+		
+			// repère si le chocobo du joueur est inscrit à une course qui a déjà commencé
+			$race = ORM::factory('race', $user->chocobo->race_id);
+			if ($race->loaded and $race->scheduled < date('Y-m-d H:i:s'))
+			{
+				// SIMULATION
+				$s = new Simulation();
+				$s->run($race);
+			}
+			
+			// repère si le chocobo possède des historiques de course non vus (et non encore notifiés)
+			$results = ORM::factory('result')
+				->where('chocobo_id', $user->chocobo->id)
+				->where('seen', FALSE)
+				->where('notified', FALSE)
+				->find_all();
+			$nbr_results = count($results);
+				
+			foreach($results as $result)
+			{
+				$result->notified = TRUE;
+				$result->save();
+			}
+			
+			if ($nbr_results == 1)
+			{
+				jgrowl::add('Vous avez un historique de course non vu.');
+			}
+			else if ($nbr_results > 1)
+			{
+				jgrowl::add('Vous avez ' . $nbr_results . ' historiques de course non vu.');
+			}
+		
 		}
 		
 		// démarre le profiler

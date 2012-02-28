@@ -10,6 +10,7 @@
 	
 	.results {width: 100%; border-bottom: 1px solid #e4e4e4;}
 	.result {height: 40px; border-top: 1px solid #e4e4e4; position: relative;}
+	.not_seen {background-color: #fee;}
 </style>
 
 <h1>Courses de classe <?php echo Kohana::lang("chocobo.classes.$classe"); ?></h1>
@@ -54,8 +55,10 @@
 <h2>Historique des courses</h2>
 
 <div class="results">
-	<?php foreach ($results as $result): ?>
-		<div class="result" id="result<?php echo $result->race->id ?>">
+	<?php foreach ($results as $result): 
+		$not_seen = ( ! $result->seen) ? ' not_seen': '';
+		?>
+		<div class="result<?php echo $not_seen ?>" id="result<?php echo $result->race->id ?>">
 			<div class="options">
 				<?php 
 					echo html::anchor('#', 

@@ -95,6 +95,16 @@ class Race_Controller extends Template_Controller
 				$results[] = $result;
 			}
 			
+			$result = ORM::factory('result')
+				->where('chocobo_id', $user->chocobo->id)
+				->where('race_id', $id)
+				->find();
+			if ( ! $result->seen)
+			{
+				$result->seen = TRUE;
+				$result->save();
+			}
+					
 			$this->template->content = View::factory("races/results")
 				->bind('race', $race)
 				->bind('results', $results)

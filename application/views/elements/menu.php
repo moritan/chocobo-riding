@@ -76,7 +76,20 @@ if ( ! $user->loaded):
 	$selected = (strrpos($url, 'races') === FALSE) ? '' : ' class="selected"';
 	?>
 	<li<?php echo $selected ?>>
-		<?php echo html::anchor('races', Kohana::lang('menu.races')); ?>
+		<a href="<?php echo url::base() ?>races">
+			Courses
+			<?php
+			$nbr_races = ORM::factory('result')
+				->where('chocobo_id', $user->chocobo->id)
+				->where('seen', FALSE)
+				->count_all();
+			if ($nbr_races > 0):
+			?>
+			<div class="rfloat notif notif_new">
+				<?php echo $nbr_races ?>
+			</div>
+			<?php endif; ?>
+		</a>
 	</li>
 		
 	<?php
