@@ -26,8 +26,10 @@
 				$start = strtotime($race->scheduled);
 				$time = time();
 				$left = $start - $time;
-				echo ($left >= 60) ? floor($left / 60) . 'm': $left . 's';
 				?>
+				<script>
+					countdown('#r<?php echo $race->id ?> .race-time', <?php echo $left ?>, 'Terminé', false);
+				</script>
 			</td>
 			<td class="race-location"><?php echo $race->location->ref; ?></td>
 			<td class="race-location"><?php echo ($race->private) ? 'Privé': 'Officiel'; ?></td>
@@ -107,7 +109,6 @@ $(function(){
 			});
 			return false;
 		});
-	
 });
 
 </script>

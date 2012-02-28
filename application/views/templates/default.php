@@ -5,7 +5,7 @@
 	<head> 
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
 		<meta name="description" content="Simulation de courses de chocobos" /> 
-		<title><?php echo Kohana::lang('default.title'); ?></title> 
+		<title>NEW CR</title> 
 		<?php 
 			echo html::stylesheet('styles/default.css', 'screen', false);
 			echo html::script('javascripts/lib/jquery.min.js');
@@ -15,6 +15,8 @@
 			
 			echo html::stylesheet('javascripts/lib/jgrowl/jquery.jgrowl.css', 'screen', false);
 			echo html::script('javascripts/lib/jgrowl/jquery.jgrowl_minimized.js');
+			
+			echo html::script('javascripts/countdown.js');
 		?>
 		
 		<script type="text/javascript">
