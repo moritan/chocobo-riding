@@ -2,19 +2,18 @@
 
 class Controller extends Controller_Core
 {
-	public $session;
+	/**
+     * Layout commun aux contrôleurs
+     */
+    public $template = "templates/default";
 	
-	// Default template
-	public $template = "templates/default";
-	
-	// Active auto render
+	/**
+     * Vue auto-rendue
+     */
     public $auto_render = true;
 	
 	/**
-     * __construct function.
-     * 
-     * @access public
-     * @return void
+     * Bootstrap
      */
     public function __construct()
     {
@@ -33,6 +32,7 @@ class Controller extends Controller_Core
 			$this->session->set('user', $user);
 		}
 		
+		// repère si le chocobo du joueur n'a pas de nom
 		if ($user->loaded)
 		{
 			if (empty($user->chocobo->name) and Router::$current_uri != 'chocobo/edit')
@@ -47,14 +47,11 @@ class Controller extends Controller_Core
     }
     
     /**
-     * Access redirection for logged_in & logged_out mode
+     * Redirige si l'accès n'est pas accordé
      * 
-     * @access public
-     * @param mixed $status
-     * @param string $url. (default: NULL)
-     * @return void
+     * @param	string		Statut du demandeur
      */
-    public function auth($status) 
+    public function auth ( $status ) 
     {
     	$user = $this->session->get('user');
     	
