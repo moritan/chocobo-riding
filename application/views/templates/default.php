@@ -12,17 +12,21 @@
 			
 			echo html::stylesheet('javascripts/lib/tipsy/tipsy.css', 'screen', false);
 			echo html::script('javascripts/lib/tipsy/jquery.tipsy.js');
+			
+			echo html::stylesheet('javascripts/lib/jgrowl/jquery.jgrowl.css', 'screen', false);
+			echo html::script('javascripts/lib/jgrowl/jquery.jgrowl_minimized.js');
 		?>
 		
 		<script type="text/javascript">
 			
-			<?php require APPPATH.'config/config'.EXT; ?>
-			var baseUrl = "<?php echo (IN_PRODUCTION ? 'http://'.$_SERVER['SERVER_NAME'].'/' : "http://localhost/chocobo-riding/www/"); ?>";
+			<?php require APPPATH . 'config/config' . EXT ?>
+			var baseUrl = "<?php echo (IN_PRODUCTION ? 'http://' . $_SERVER['SERVER_NAME'] . '/' : 'http://localhost/chocobo-riding/www/') ?>";
 			
 		</script>
 	</head> 
 	
 	<body>
+		<div id="jgrowl_content"><?php echo View::factory("elements/jgrowl") ?></div>
 	
 		<div class="container">
 		
@@ -35,7 +39,7 @@
 				<div class="hmenu"></div>
 					
 				<div class="vmenu">
-					<?php echo View::factory('elements/menu'); ?>
+					<?php echo View::factory('elements/menu') ?>
 				</div>
 				
 				<div class="content">
