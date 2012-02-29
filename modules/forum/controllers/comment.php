@@ -76,7 +76,8 @@ class Comment_Controller extends Template_Controller
 			$res['error'] = $error;
 			if ($res['success'])
 			{
-				$res['text'] = nl2br($comment->content);
+				require_once Kohana::find_file('libraries', 'markdown');
+				$res['text'] = Markdown($comment->content);
 				$res['date'] = date::display($comment->updated);
 			}
 			echo json_encode($res);

@@ -62,10 +62,7 @@ $border = ($different_user) ? 'solidborder': 'dottedborder';
 		</div>
 		
 		<div class="text">
-			<?php 
-			$content = Markdown($comment->content);
-			echo nl2br($content);
-			?>
+			<?php echo Markdown($comment->content) ?>
 		</div>
 		
 		<?php if ( ! $first_comment and $comment->user_id == $user->id): ?>

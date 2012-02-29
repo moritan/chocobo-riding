@@ -28,7 +28,7 @@
 	.reply2 {width: 100%; margin: 5px 0 5px 0;}
 	.reply2 .textarea {float: left; width: 450px;}
 	.reply2 textarea {width: 450px; height: 150px; outline: none; resize: none; padding: 3px; border-color: #899BC1;}
-	.reply2 .submit {float: left;}
+	.reply2 .submit {float: left; margin-top: 11px;}
 	
 	.comment .favon {font-weight: bold; font-style: italic; color: #333;}
 	.comment .hidden {display: none;}
@@ -39,7 +39,7 @@ echo html::stylesheet('javascripts/lib/markitup/skins/markitup/style.css', 'scre
 echo html::stylesheet('javascripts/lib/markitup/sets/markdown/style.css', 'screen', false);
 echo html::script('javascripts/lib/markitup/jquery.markitup.js');
 echo html::script('javascripts/lib/markitup/sets/markdown/set.js');
-require Kohana::find_file('libraries', 'markdown');
+require_once Kohana::find_file('libraries', 'markdown');
 ?>	
 
 <h1>Forum</h1>
