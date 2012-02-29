@@ -10,12 +10,18 @@
 	.comment .avatar {width: 64px; float: left; margin: 14px 0 0 18px;}
 	.comment .textarea {float: left; width: 450px; margin-left: 14px; position: relative;}
 	.comment textarea {width: 450px; height: 150px; font-size: 11px; outline: none; resize: none; padding: 3px; border: 1px solid #899BC1; color: #333;}
-	.comment .submit {float: left;}
+	.comment .submit {float: left; margin-top: 19px;}
 	
 	.holder {position: absolute; color: #999; z-index: 1; top: 5px; left: 8px;}
 </style>
 
-<div class="clearleft"></div>
+<?php
+echo html::stylesheet('javascripts/lib/markitup/skins/markitup/style.css', 'screen', false);
+echo html::stylesheet('javascripts/lib/markitup/sets/markdown/style.css', 'screen', false);
+echo html::script('javascripts/lib/markitup/jquery.markitup.js');
+echo html::script('javascripts/lib/markitup/sets/markdown/set.js');
+require_once Kohana::find_file('libraries', 'markdown');
+?>	
 
 <?php
 if ($form['topic']['id'] == 0)
@@ -34,13 +40,13 @@ else
 	
 	<div class="left"></div>
 	<div class="right">
-		<?php echo form::input('title', $form['topic']['title'], 'placeholder="Titre.."') ?>
+		<?php echo form::input('title', $form['topic']['title']) ?>
 	</div>
 	<div class="clearleft"></div>
 	
 	<div class="left"></div>
 	<div class="right">
-		<?php echo form::input('tags', $form['topic']['tags'], 'placeholder="Tags.."') ?>
+		<?php echo form::input('tags', $form['topic']['tags']) ?>
 	</div>
 	<div class="clearleft"></div>
 		
@@ -63,9 +69,9 @@ else
 	</div>
 	<div class="textarea">
 		<?php echo form::textarea(array(
-        	'id' => 'textile', 
+        	'id' => 'content',
+        	'class' => 'markdown', 
         	'name' => 'content',
-        	'placeholder' => 'Commentaire..',
         	'value' => $form['comment']['content']
         )) ?>
 	</div>
@@ -86,6 +92,8 @@ echo form::close();
 
 <script>
 $(function(){
+
+	$('.markdown').markItUp(mySettings);
 
 	$('input[name=title], input[name=tags], textarea[name=content]')
 		.focus(function(){
