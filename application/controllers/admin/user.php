@@ -1,6 +1,6 @@
 <?php
 
-class User_Controller extends Template_Controller 
+class User_Controller extends Admin_Controller 
 {
 
 	// liste tous les joueurs

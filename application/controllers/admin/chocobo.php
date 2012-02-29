@@ -1,6 +1,6 @@
 <?php
 
-class Chocobo_Controller extends Template_Controller 
+class Chocobo_Controller extends Admin_Controller 
 {
 
 	// liste tous les chocobos

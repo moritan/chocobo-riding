@@ -1,6 +1,6 @@
 <?php
 
-class Location_Controller extends Template_Controller 
+class Location_Controller extends Admin_Controller 
 {
 
 	/*Liste des lieux*/
