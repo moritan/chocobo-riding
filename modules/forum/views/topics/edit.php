@@ -1,6 +1,6 @@
 <style>
 	.topic {width: 100%;} 
-	.topic .left {width: 64px; float: left; margin: 14px 0 0 18px;}
+	.topic .left {width: 64px; float: left; margin: 5px 0 0 18px; font-weight: bold; font-variant: small-caps; text-align: right;}
 	.topic .right {width: 450px; float: left; margin-left: 14px; position: relative;}
 	.topic input {color: #333;}
 	.topic input[type=text] {width: 450px; font-size: 11px; outline: none; padding: 3px; border: 1px solid #899BC1;}
@@ -11,8 +11,6 @@
 	.comment .textarea {float: left; width: 450px; margin-left: 14px; position: relative;}
 	.comment textarea {width: 450px; height: 150px; font-size: 11px; outline: none; resize: none; padding: 3px; border: 1px solid #899BC1; color: #333;}
 	.comment .submit {float: left; margin-top: 19px;}
-	
-	.holder {position: absolute; color: #999; z-index: 1; top: 5px; left: 8px;}
 </style>
 
 <?php
@@ -38,13 +36,13 @@ else
 
 <div class="topic">
 	
-	<div class="left"></div>
+	<div class="left">titre</div>
 	<div class="right">
 		<?php echo form::input('title', $form['topic']['title']) ?>
 	</div>
 	<div class="clearleft"></div>
 	
-	<div class="left"></div>
+	<div class="left">tags</div>
 	<div class="right">
 		<?php echo form::input('tags', $form['topic']['tags']) ?>
 	</div>
@@ -65,13 +63,14 @@ else
 
 <div class="comment">
 	<div class="avatar">
-		
+	
 	</div>
 	<div class="textarea">
 		<?php echo form::textarea(array(
         	'id' => 'content',
         	'class' => 'markdown', 
         	'name' => 'content',
+        	'placeholder' => 'Commentaire..',
         	'value' => $form['comment']['content']
         )) ?>
 	</div>

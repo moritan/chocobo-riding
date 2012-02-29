@@ -116,6 +116,7 @@ echo View::factory('topics/comment')
 			<?php echo form::textarea(array(
 	        	'class' => 'markdown', 
 	        	'name' => 'content', 
+	        	'placeholder' => 'Un commentaire ?',
 	        	'value' => ''
 	        )) ?>
 	    </div>
