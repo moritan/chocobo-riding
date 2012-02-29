@@ -63,9 +63,8 @@ $border = ($different_user) ? 'solidborder': 'dottedborder';
 		
 		<div class="text">
 			<?php 
-			//$textile = new Textile;
-			//$content = $textile->TextileThis($comment->content);
-			echo nl2br($comment->content);
+			$content = Markdown($comment->content);
+			echo nl2br($content);
 			?>
 		</div>
 		
@@ -73,7 +72,14 @@ $border = ($different_user) ? 'solidborder': 'dottedborder';
 			<div class="form">
 				<div class="reply2">
 				<?php echo form::open('comments/' . $comment->id . '/edit') ?>
-				<div class="textarea"><?php echo form::textarea('content-edit', $comment->content) ?></div>
+				<div class="textarea">
+					<?php echo form::textarea(array(
+			        	'id' => 'content-edit',
+			        	'class' => 'markdown', 
+			        	'name' => 'content-edit', 
+			        	'value' => $comment->content
+			        )) ?>
+			   </div>
 				<div class="submit">
 					<div class="button blue submit" id="c<?php echo $comment->id ?>">Modifier</div><br />
 					<div class="button grey cancel" id="c<?php echo $comment->id ?>">Annuler</div>

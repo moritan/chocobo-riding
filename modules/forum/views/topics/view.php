@@ -23,7 +23,7 @@
 	.reply .avatar {width: 64px; float: left; margin: 14px 0 0 18px;}
 	.reply .textarea {float: left; width: 450px; margin-left: 14px;}
 	.reply textarea {width: 450px; height: 150px; outline: none; resize: none; padding: 3px; border-color: #899BC1; color: #333;}
-	.reply .submit {float: left;}
+	.reply .submit {float: left; margin-top: 19px;}
 	
 	.reply2 {width: 100%; margin: 5px 0 5px 0;}
 	.reply2 .textarea {float: left; width: 450px;}
@@ -33,6 +33,14 @@
 	.comment .favon {font-weight: bold; font-style: italic; color: #333;}
 	.comment .hidden {display: none;}
 </style>
+
+<?php
+echo html::stylesheet('javascripts/lib/markitup/skins/markitup/style.css', 'screen', false);
+echo html::stylesheet('javascripts/lib/markitup/sets/markdown/style.css', 'screen', false);
+echo html::script('javascripts/lib/markitup/jquery.markitup.js');
+echo html::script('javascripts/lib/markitup/sets/markdown/set.js');
+require Kohana::find_file('libraries', 'markdown');
+?>	
 
 <h1>Forum</h1>
 
@@ -106,12 +114,11 @@ echo View::factory('topics/comment')
 		</div>
 		<div class="textarea">
 			<?php echo form::textarea(array(
-	        	'id' => 'textile', 
-	        	'placeholder' => 'Un commentaire ?', 
+	        	'class' => 'markdown', 
 	        	'name' => 'content', 
 	        	'value' => ''
 	        )) ?>
-		</div>
+	    </div>
 		<div class="submit">
 			<?php echo form::submit(array(
 		    	'name' => 'submit', 
@@ -129,6 +136,8 @@ echo View::factory('topics/comment')
 <script>
 
 $(function(){
+
+	$('.markdown').markItUp(mySettings);
 
 	$('*[rel=tipsy]').tipsy({gravity: 's'});
 	
